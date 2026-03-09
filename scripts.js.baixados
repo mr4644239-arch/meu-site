@@ -1,0 +1,404 @@
+$(window).on("load", function () {
+  $("#formularioTrabalheConosco").on("submit", function () {
+    let impede = 0;
+
+    if (!$("#nome").val()) {
+      $("#spanObrigatorioNome").css("display", "block");
+      impede = 1;
+    }
+
+    if (!$("#email").val()) {
+      $("#spanObrigatorioEmail").css("display", "block");
+      impede = 1;
+    }
+
+    if (!$("#telefone").val()) {
+      $("#spanObrigatorioTelefone").css("display", "block");
+      impede = 1;
+    }
+
+    if ($("#curriculoArquivo")[0].files.length == 0) {
+      $("#spanObrigatorio").css("display", "block");
+      impede = 1;
+    }
+
+    if (!$("#areaInteresse option:selected").val()) {
+      $("#spanObrigatorioAreaInteresse").css("display", "block");
+      impede = 1;
+    }
+
+    if (!$("input[name='opcoes[]']:checked").length) {
+      $("#spanObrigatorioOpcoes").css("display", "block");
+      impede = 1;
+    }
+
+    if (!$("#estado option:selected").val()) {
+      $("#spanObrigatorioEstado").css("display", "block");
+      impede = 1;
+    }
+
+    if (!$("#municipio option:selected").val()) {
+      $("#spanObrigatorioMunicipio").css("display", "block");
+      impede = 1;
+    }
+
+    if (impede == 1) {
+      return false;
+    }
+  });
+
+  $("#curriculoArquivo").on("change", function () {
+    console.log("change");
+    if ($("#curriculoArquivo")[0].files.length == 0) {
+      $("#spanObrigatorio").css("display", "block");
+      $("#nomeCurriculo").css("display", "none");
+      $("#apagaArquivo").css("display", "none");
+      $("#nomeCurriculo").html("");
+    } else {
+      $("#spanObrigatorio").css("display", "none");
+      $("#nomeCurriculo").css("display", "block");
+      $("#apagaArquivo").css("display", "block");
+
+      $("#nomeCurriculo").html($("#curriculoArquivo")[0].files[0].name);
+    }
+  });
+
+  $("#apagaArquivo").on("click", function () {
+    $("#curriculoArquivo").val("");
+    $("#nomeCurriculo").css("display", "none");
+    $("#nomeCurriculo").html("");
+    $("#apagaArquivo").css("display", "none");
+  });
+
+  $("#triggerCurriculo").on("click", function () {
+    $("#curriculoArquivo").trigger("click");
+  });
+
+  if ($(".owl-carousel-agenda").length > 0) {
+    if ($(".owl-carousel-agenda").hasClass("justifica-carousel-agenda")) {
+      $(".owl-carousel-agenda .owl-wrapper-outer").css(
+        "justify-content",
+        "center"
+      );
+    }
+  }
+
+  if ($(".box-descricao-convenios-regula-altura").length > 0) {
+    setTimeout(function () {
+      $(".box-descricao-convenios-regula-altura").each(function () {
+        if (
+          $(this).height() >
+          $('[data-foto-convenio="' + $(this).data("convenio") + '"]').height()
+        ) {
+          $(this).addClass("box-descricao-convenios-regula-altura-auxiliar");
+          $(this).css(
+            "max-height",
+            $(
+              '[data-foto-convenio="' + $(this).data("convenio") + '"]'
+            ).height() -
+            28.6 +
+            "px"
+          );
+          $("#convenio-ver-mais-" + $(this).data("convenio")).css(
+            "display",
+            "block"
+          );
+        }
+      });
+    }, 500);
+  }
+
+  $(".ver-mais-convenio-regula-altura").on("click", function (e) {
+    e.preventDefault();
+
+    if (
+      $('[data-convenio="' + $(this).data("numero-convenio") + '"]').hasClass(
+        "box-descricao-convenios-regula-altura-auxiliar"
+      )
+    ) {
+      $(
+        '[data-convenio="' + $(this).data("numero-convenio") + '"]'
+      ).removeClass("box-descricao-convenios-regula-altura-auxiliar");
+      $('[data-convenio="' + $(this).data("numero-convenio") + '"]').css(
+        "max-height",
+        ""
+      );
+    } else {
+      $('[data-convenio="' + $(this).data("numero-convenio") + '"]').addClass(
+        "box-descricao-convenios-regula-altura-auxiliar"
+      );
+      $('[data-convenio="' + $(this).data("numero-convenio") + '"]').css(
+        "max-height",
+        $(
+          '[data-foto-convenio="' + $(this).data("numero-convenio") + '"]'
+        ).height() -
+        28.6 +
+        "px"
+      );
+    }
+  });
+
+  $(".btn-upload-modal").on("click", function () {
+    $("#uploadModal .modal-body .sec-secondary").hide();
+    $("#uploadModal").modal("show");
+    $("#uploadModal #uploadModalForm").attr(
+      "action",
+      $(this).attr("data-href")
+    );
+  });
+
+  $("#uploadModal #uploadModalForm").on("submit", function () {
+    $("#uploadModal .modal-body .sec-primary").hide();
+    $("#uploadModal .modal-body .sec-secondary").show();
+  });
+
+  $("body").delegate(".btn-upload-multiplo-modal", "click", function () {
+    $("#uploadMultiploModal").modal("show");
+    $("#uploadMultiploModal #uploadModalForm").attr(
+      "action",
+      $(this).attr("data-href")
+    );
+
+    if ($(this).attr("data-multiplo")) {
+      $("#uploadMultiploModal #uploadModalForm #files").prop("multiple", true);
+    } else {
+      $("#uploadMultiploModal #uploadModalForm #files").prop("multiple", false);
+    }
+
+    if ($(this).attr("data-arquivo")) {
+      $("#uploadMultiploModal #uploadModalForm #files").attr("data-arquivo", 1);
+    } else {
+      $("#uploadMultiploModal #uploadModalForm #files").attr("data-arquivo", 0);
+    }
+  });
+
+  $("body").delegate(
+    ".btn-upload-multiplo-modal-exclusao",
+    "click",
+    function () {
+      $("#uploadMultiploModalExclusao").modal("show");
+      $("#uploadMultiploModalExclusao #uploadModalFormExclusao").attr(
+        "action",
+        $(this).attr("data-href")
+      );
+
+      if ($(this).attr("data-multiplo")) {
+        $(
+          "#uploadMultiploModalExclusao #uploadModalFormExclusao #filesExclusao"
+        ).prop("multiple", true);
+      } else {
+        $(
+          "#uploadMultiploModalExclusao #uploadModalFormExclusao #filesExclusao"
+        ).prop("multiple", false);
+      }
+
+      if ($(this).attr("data-arquivo")) {
+        $(
+          "#uploadMultiploModalExclusao #uploadModalFormExclusao #filesExclusao"
+        ).attr("data-arquivo", 1);
+      } else {
+        $(
+          "#uploadMultiploModalExclusao #uploadModalFormExclusao #filesExclusao"
+        ).attr("data-arquivo", 0);
+      }
+    }
+  );
+
+  $("#uploadMultiploModal #uploadModalForm").on("submit", function () {
+    $("#uploadMultiploModal .modal-body .sec-primary").hide();
+    $("#uploadMultiploModal .modal-body .sec-secondary").show();
+  });
+
+  $("#uploadMultiploModalExclusao #uploadModalFormExclusao").on(
+    "submit",
+    function () {
+      $("#uploadMultiploModalExclusao .modal-body .sec-primary").hide();
+      $("#uploadMultiploModalExclusao .modal-body .sec-secondary").show();
+    }
+  );
+
+  $(".btn-gerar-guia").click(async function () {
+    var empresa = $(this).attr("data-id-empresa")
+    var solicitante = $("#guianomesolicitante-" + empresa + "").val()
+    var empresaSolicitante = $("#guianomeempresa-" + empresa + "").val()
+    var convenio = $(this).attr("data-id-convenio")
+    var url = $(this).attr("data-url")
+
+    console.log(url);
+
+    if (solicitante == '') {
+      alert('Nome é obrigatório');
+      return
+    }
+
+    if (empresaSolicitante == '') {
+      alert('Empresa do solicitante é obrigatório');
+      return
+    }
+
+    await $.ajax({
+      url: url,
+      type: 'GET',
+      data: {
+        solicitante: solicitante,
+        empresaSolicitante: empresaSolicitante,
+        empresa: empresa,
+        convenio: convenio,
+      },
+      dataType: 'json',
+      success: function (data) {
+        console.log(data);
+        $('#btn-guia-download').attr("href", url + '/' + data["guia_emitida"]["GuiaCodigo"]);
+        $("#show-solicitante-guia").html(data["guia_emitida"]["GuiaNomeSolicitante"]);
+        $("#show-solicitante-empresa-guia").html(data["guia_emitida"]["GuiaSolicitanteEmpresa"]);
+        $("#show-empresa-convenio").html(data["guia"]["emp"]["EmpRazaoSocial"]);
+        $("#show-empresa-endereco").html(data["guia"]["emp"]["EmpEndereco"]);
+        $("#show-empresa-complemento").html(data["guia"]["emp"]["EmpComplemento"]);
+        $("#show-empresa-bairro").html(data["guia"]["emp"]["EmpBairro"]);
+        $("#show-empresa-telefone").html(data["guia"]["emp"]["EmpTelefone"]);
+        $("#show-empresa-documento").html(data["guia"]["emp"]["EmpCnpjCpf"]);
+
+        let body_table = '';
+
+        for (let index = 0; index < data["guia"]["servicos"].length; index++) {
+          let description = '';
+          if (data["guia"]["servicos"][index]["SerTipo"] == 2) {
+            description = 'Desconto de R$ ' + data["guia"]["servicos"][index]["SerValor"];
+          } else if (data["guia"]["servicos"][index]["SerTipo"] == 3) {
+            description = 'Valor Fixo R$' + data["guia"]["servicos"][index]["SerValor"];
+          } else if (data["guia"]["servicos"][index]["SerTipo"] == 4) {
+            description = 'Convênios';
+          } else {
+            description = 'Desconto de ' + data["guia"]["servicos"][index]["SerValor"];
+          }
+
+          body_table = body_table + '<tr> <td> <label for="">' + data["guia"]["servicos"][index]["SerTitulo"] + '</label><br>' + description + '</td></tr>'
+        }
+
+        $("#body-table-guia-gerada").html(body_table)
+      }
+    });
+
+    $("#modalGuia").modal("show");
+  });
+
+  $('#btn-guia-impressao').click(function () {
+    var modal = $('#modalGuia');
+
+    // Abre o modal
+    modal.modal('show');
+
+    // Espera um pouco para garantir que o modal esteja totalmente aberto
+    setTimeout(function () {
+      // Clona o conteúdo do modal para uma nova janela
+      var printWindow = window.open('', '', 'width=600,height=400');
+      printWindow.document.open();
+      printWindow.document.write('<html><head><title>Imprimir Guia</title></head><body>');
+      printWindow.document.write(modal.find('.modal-content-guia').html());
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+
+      // Espera o carregamento do conteúdo antes de imprimir
+      printWindow.onload = function () {
+        printWindow.print();
+        printWindow.close();
+      };
+    }, 500); // Ajuste o atraso conforme necessário
+  });
+
+  $(".btn-modal-generic").on("click", function () {
+    $('#iframe-loading-overlay').css('display', 'flex');
+    $("#modal-generic").modal("show");
+    $("#modal-generic #modal-generic-iframe").attr(
+      "src",
+      $(this).attr("data-href")
+    );   
+  });
+
+  $(document).ready(function() {
+    //Recarrega pagina atual ao fechar modal
+    $('#modal-generic').on('hidden.bs.modal', function () {
+      $('#modal-generic-iframe').attr('src', 'about:blank'); // Limpa o iframe
+      location.reload();
+    });
+  });
+
+  $(".btn-upload-banco-imagens").on("click", function () {
+    $("#modal-banco-imagens").modal("show");
+  });
+
+  $(".btn-upload-banco-arquivos").on("click", function () {
+    $("#modal-banco-arquivos").modal("show");
+  });
+
+  $("[data-toggle=modal-href]").on("click", function (event) {
+    event.preventDefault();
+    modal = $("#modal_href").clone();
+
+    modal.find(".modal-title").html($(this).attr("data-title"));
+    modal
+      .find("#iframe")
+      .attr("src", "javascript: document.write='Carregando...';");
+    modal.find("#iframe").attr("src", $(this).attr("data-href"));
+
+    modal.find("#iframe").load(function () {
+      modal.find("#iframe").css({
+        height: modal.find("#iframe")[0].contentDocument.body.offsetHeight,
+      });
+
+      intervalSize = setInterval(function () {
+        modal.find("#iframe")[0].style.height =
+          modal.find("#iframe")[0].contentDocument.body.offsetHeight + "px";
+      }, 1000);
+
+      modal.on("hide.bs.modal", function () {
+        clearInterval(intervalSize);
+      });
+    });
+
+    modal.modal("show");
+
+    if ($(this).attr("data-refresh") == 1) {
+      modal.on("hide.bs.modal", function () {
+        window.location.reload();
+      });
+    }
+  });
+
+  $(".btn-destroy").click(function (e) {
+    if (!confirm("Deseja excluir esse Registro?")) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  $(".btn-destroy-inscricao").click(function (e) {
+    if (!confirm("Deseja realmente cancelar? Esta operação não pode ser desfeita.")) {
+      e.preventDefault();
+      return false;
+    }
+
+    $($(this).data("modalalvo")).modal('toggle');
+  });
+
+  $(".btn-inativar-curriculo").click(function (e) {
+    if (!confirm("Deseja desativar este Currículo?")) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  $(".btn-destaque").click(function (e) {
+    if (!confirm("Deseja definir essa imagem como destaque?")) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  $(".btn-destroy-lgpd").click(function (e) {
+    if (!confirm("Deseja excluir os dados vinculados a esta plataforma?")) {
+      e.preventDefault();
+      return false;
+    }
+  });
+});
